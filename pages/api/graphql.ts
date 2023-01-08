@@ -23,7 +23,8 @@ export default cors(async function handler(
   }
   await startServer;
   await apolloServer.createHandler({
-    path: process.env.AUTH0_BASE_URL + "/api/graphql",
+    // path: process.env.AUTH0_BASE_URL + "/api/graphql",
+    path: "/api/graphql",
   })(req, res);
 });
 
