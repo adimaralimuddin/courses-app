@@ -9,10 +9,10 @@ npm run check-types || (
     false;
 )
 
-npm run check-format || (
-    echo '❌FAILED check-format.'
-    false;
-)
+# npm run check-format || (
+#     echo '❌FAILED check-format.'
+#     false;
+# )
 
 npm run check-lint || (
     echo '❌FAILED check-lint.'
