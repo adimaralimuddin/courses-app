@@ -1,0 +1,24 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo 'ANALIZING code before commiting.'
+
+npm run check-types || (
+
+    echo '❌FAILED type-check.' 
+    false;
+)
+
+npm run check-format || (
+    echo '❌FAILED check-format.'
+    false;
+)
+
+npm run check-lint || (
+    echo '❌FAILED check-lint.'
+    false;
+)
+
+echo '✔all checkings passed.'
+
+
