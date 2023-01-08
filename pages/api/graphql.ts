@@ -3,7 +3,7 @@ import { ApolloServer } from "apollo-server-micro";
 import { NextApiRequest, NextApiResponse } from "next";
 import { createContext } from "../../graphql/context";
 import { schema } from "../../graphql/schema";
-// import Cors from "micro-cors";
+
 const Cors = require("micro-cors");
 
 const cors = Cors();
@@ -23,7 +23,7 @@ export default cors(async function handler(
   }
   await startServer;
   await apolloServer.createHandler({
-    path: "/api/graphql",
+    path: process.env.AUTH0_BASE_URL + "/api/graphql",
   })(req, res);
 });
 
