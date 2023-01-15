@@ -11,7 +11,6 @@ export default function MyCourseItem({ course }: Props) {
     <div>
       <CourseItemComp
         course={course}
-        detailPath="/my-courses"
         Updater={<MyCourseUpdater courseId={course.id} />}
         Deleter={<MyCourseDeleter courseId={course.id} />}
       />

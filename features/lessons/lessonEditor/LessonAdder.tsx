@@ -15,7 +15,12 @@ export default function LessonAdder({ moduleId }: Props) {
   };
   return (
     <div>
-      <button onClick={() => setOpen((p) => !p)}>add</button>
+      <button
+        className="rounded-full ring-1d ring-rose-400 px-3 text-rose-500 font-semibold"
+        onClick={() => setOpen((p) => !p)}
+      >
+        add lesson
+      </button>
       <Modal open={open} set={setOpen}>
         <div className="flex flex-col w-full max-w-xl">
           <LessonEditor onSave={onDone} />

@@ -29,10 +29,7 @@ export default function LessonEditorComp({ lesson, onSave, text }: Props) {
   };
   return (
     <div>
-      <form
-        className="flex flex-col bg-slate-700 gap-2 p-3 "
-        onSubmit={onSubmit}
-      >
+      <form className="flex flex-col gap-2 p-3 " onSubmit={onSubmit}>
         <Input
           value={title}
           onChange={(e: any) => setTitle(e.target.value)}

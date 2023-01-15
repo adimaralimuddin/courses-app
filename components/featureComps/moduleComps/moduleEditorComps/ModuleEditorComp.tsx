@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from "react";
 import ModuleType from "../../../../features/modules/ModuleTypes";
-import Card from "../../../elements/Card";
+import Input from "../../../elements/Input";
 
 interface Props {
   onSave: (moduleData: ModuleType, ...x: any) => any;
@@ -16,25 +16,23 @@ export default function ModuleEditorComp({ onSave }: Props) {
   };
   return (
     <div>
-      <Card>
-        <form onSubmit={onSubmit}>
-          <input
+      <div className="max-w-xl bg-whited">
+        <form onSubmit={onSubmit} className="flex gap-2 flex-wrap">
+          <Input
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            type="text"
+            onChange={(e: any) => setTitle(e.target.value)}
             required
-            name="title"
+            placeholder="title"
           />
-          <input
+          <Input
             value={duration}
-            onChange={(e) => setDuration(e.target.value)}
-            type="text"
+            onChange={(e: any) => setDuration(e.target.value)}
             required
-            name="title"
+            placeholder="duration"
           />
           <button type="submit">add</button>
         </form>
-      </Card>
+      </div>
     </div>
   );
 }

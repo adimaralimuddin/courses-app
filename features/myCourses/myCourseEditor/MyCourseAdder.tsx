@@ -6,11 +6,7 @@ import useMyCourseMutate from "../myCourseHooks/useMyCourseMutate";
 export default function MyCourseAdder() {
   const { addCourse } = useMyCourseMutate();
   const onDone = (courseData: CourseType, caller: any) => {
-    addCourse(courseData, { onSuccess: caller });
+    addCourse({ ...courseData, duration: 70 }, { onSuccess: caller });
   };
-  return (
-    <div className="ring-2 rounded-xl p-1">
-      <CourseEditorComp onDone={onDone} />
-    </div>
-  );
+  return <CourseEditorComp onDone={onDone} />;
 }

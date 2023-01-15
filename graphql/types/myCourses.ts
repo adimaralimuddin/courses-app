@@ -1,6 +1,6 @@
 import { getSession } from "@auth0/nextjs-auth0";
 import { booleanArg, extendType, intArg, nonNull, stringArg } from "nexus";
-import { Course } from "./course";
+import { Course, CoursePage } from "./course";
 
 export const MyCoursesQuery = extendType({
   type: "Query",
@@ -28,7 +28,93 @@ export const MyCoursesQuery = extendType({
           where: { id, creatorId: user.sub },
         });
       },
-    });
+    }); // my course
+
+    // query courses
+    t.field("queryMyCourse", {
+      type: CoursePage,
+      args: {
+        filter: nonNull(stringArg()),
+        text: nonNull(stringArg()),
+        order: nonNull(stringArg()),
+        sort: stringArg(),
+        price: intArg(),
+        free: booleanArg(),
+        discount: intArg(),
+        ratings: intArg(),
+        language: stringArg(),
+        duration: intArg(),
+        level: intArg(),
+        cursor: stringArg(),
+        queryDirection: intArg(),
+      },
+      async resolve(par, args, { prisma, user }) {
+        console.log("args ", args);
+        const dynamicFields: any = {};
+        const count = 3;
+
+        if (args?.free !== null) {
+          dynamicFields.free = args.free;
+        }
+        if (args?.language !== null) {
+          dynamicFields.language = {
+            contains: args.language?.trim(),
+          };
+        }
+        if (args?.level !== 0 && args?.level) {
+          dynamicFields.level = args.level;
+        }
+
+        const { cursor, queryDirection: dir } = args;
+        const text = args?.text?.trim();
+        console.log("here now === ", { cursor, dir, text });
+
+        const courses: any = await prisma.course.findMany({
+          where: {
+            creatorId: user.sub,
+            [args.filter]: {
+              contains: args.text?.trim(),
+              mode: "insensitive",
+            },
+            price: { lte: args?.price ? args?.price : 500 },
+            discount: { lte: args?.discount || 100 },
+            ratings: { lte: args?.ratings || 999999 },
+            duration: { lte: args?.duration || 360 },
+            ...dynamicFields,
+          },
+          orderBy: {
+            [args.order]: args.sort,
+          },
+          include: {
+            creator: true,
+          },
+          cursor: cursor && text == "" ? { id: cursor } : undefined,
+          skip: text !== "" || !cursor ? 0 : 1,
+          take: text !== "" ? undefined : dir == 1 ? count : -count,
+          // take: 4,
+          // text !== "" ? undefined :
+        }); // prisma end
+
+        console.log("length", courses?.length);
+        const length = courses?.length;
+
+        return {
+          // courses,
+          courses:
+            length >= count
+              ? dir == 1
+                ? courses.slice(0, -1)
+                : courses.slice(1)
+              : courses,
+          hasNextPage:
+            length > count - 1 || args.queryDirection == 0 || !args.cursor
+              ? true
+              : false,
+          hasPrevPage:
+            length > count - 1 || args.queryDirection == 1 ? true : false,
+        };
+      },
+    }); // query courses ends
   },
 });
 
@@ -52,12 +138,13 @@ export const CourseMutation = extendType({
         duration: intArg(),
         level: intArg(),
       },
-      resolve(par, args, { prisma }) {
-        // return prisma.course.create({
-        //     data:{}
-        // })
+      resolve(par, { creatorId, free, ...args }, { prisma, user }) {
         return prisma.course.create({
-          data: args as any,
+          data: {
+            ...args,
+            creatorId: user.sub,
+            free: free ? true : false,
+          },
         });
       },
     }); // add course

@@ -50,13 +50,7 @@ export default async function myCourseApiAddCourse(course: CourseType) {
         price
         ratings
         title
-        students {
-          name
-          id
-          email
-          avatar
-          about
-        }
+        imageUrl
       }
     }`,
     course,

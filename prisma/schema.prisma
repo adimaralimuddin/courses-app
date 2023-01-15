@@ -19,8 +19,13 @@ about String?
 
 courses Course[]
 subscribedCourses Course[] @relation("subscription")
-userLessons UserLesson[]
+learns Learn[]
+qnas Qna[] 
+notes Note[] 
+replies Reply[]
 
+updatedAt DateTime?
+createdAt DateTime @default(now())
 }
 
 model Course {
@@ -33,19 +38,40 @@ model Course {
   discount Int?
   discountType String?
   ratings Int?
-  language String?
+  language String? @default("english")
   duration Int?
-  level Int?
+  level Int? @default(5)
 
   creator User @relation(fields: [creatorId],references: [id])
   creatorId String
 
   students User[] @relation("subscription")
-
   modules Module[]
+  learns Learn[]
+  qnas Qna[] 
+  notes Note[] 
 
-  // userlessons UserLesson[]
+  updatedAt DateTime?
+  createdAt DateTime @default(now())
 
+}
+
+model Learn {
+  
+  userId String 
+  courseId String 
+  done Boolean @default(false)
+  lastLesson String? 
+  doneLesson String[]
+  currentLessonId String?
+
+  user User @relation(fields: [userId], references: [id])
+  course Course @relation(fields: [courseId], references: [id])
+
+  updatedAt DateTime?
+  createdAt DateTime @default(now())
+
+  @@id([userId,courseId])
 }
 
 model Module {
@@ -57,6 +83,9 @@ model Module {
   courseId String
 
   lessons Lesson[]
+
+  updatedAt DateTime?
+  createdAt DateTime @default(now())
 }
 
 model Lesson {
@@ -70,18 +99,58 @@ model Lesson {
   module Module @relation(fields: [moduleId],references: [id])
   moduleId String 
 
-  userLessons UserLesson[]
+  qnas Qna[]
+  lessons Note[]
+
+  updatedAt DateTime?
+  createdAt DateTime @default(now())
 }
 
-model UserLesson {
-  lesson Lesson @relation(fields: [lessonId],references: [id])
-  lessonId String 
+
+model Qna {
+  id String @id @default(cuid())
+  text String 
+  replies Reply[]
   
-  // course Course @relation(fields: [courseId],references: [id])
-  // courseId String 
-
-  user User @relation(fields: [userId],references: [id])
+  user User @relation(references: [id],fields: [userId])
   userId String 
+  
+  lesson Lesson @relation(references: [id],fields: [lessonId])
+  lessonId String 
 
-  @@id([lessonId,userId])  
+  course Course @relation(references: [id],fields: [courseId])
+  courseId String
+
+  updatedAt DateTime?
+  createdAt DateTime @default(now())
+}
+
+model Reply{
+  id String @id @default(cuid())
+  text String 
+  qna Qna @relation(fields: [qnaId],references: [id])
+  qnaId String
+
+  user User @relation(references: [id],fields: [userId])
+  userId String
+
+  updatedAt DateTime?
+  createdAt DateTime @default(now())
+}
+
+model Note {
+  id String @id @default(cuid())
+  text String 
+ 
+  user User @relation(references: [id],fields: [userId])
+  userId String 
+  
+  lesson Lesson @relation(references: [id],fields: [lessonId])
+  lessonId String 
+
+  course Course @relation(references: [id],fields: [courseId])
+  courseId String
+
+  updatedAt DateTime?
+  createdAt DateTime @default(now())
 }

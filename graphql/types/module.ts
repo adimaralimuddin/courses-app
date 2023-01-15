@@ -12,7 +12,9 @@ export const Module = objectType({
     t.list.field("lessons", {
       type: Lesson,
       resolve(par, arg, { prisma }) {
-        return prisma.lesson.findMany({ where: { moduleId: par.id } });
+        return prisma.lesson.findMany({
+          where: { moduleId: par.id ? par.id : undefined },
+        });
       },
     });
   },

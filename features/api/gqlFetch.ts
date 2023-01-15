@@ -2,7 +2,7 @@ import { gql, request } from "graphql-request";
 
 export default async function gqlFetch(
   gql_: string,
-  data?: Object,
+  data?: object,
   field?: string
 ): Promise<any> {
   const q = gql`

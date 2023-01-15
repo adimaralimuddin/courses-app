@@ -8,7 +8,9 @@ export default function CourseDetailEditableComp({ course }: Props) {
   return (
     <div className="p-1 bg-pink-800">
       <small>editable </small>
-      <CourseDetailCom course={course} />
+      {/* <CourseDetailCom course={course} /> */}
     </div>
   );
 }
+
+// no longer use

@@ -12,7 +12,7 @@ export default function MyCourseUpdater({ courseId }: Props) {
     console.log("to update course ", courseData);
   };
   return (
-    <div className="p-2 ring-2 rounded-xl">
+    <div className="">
       <CourseEditorComp onDone={onDone} text="edit" />
     </div>
   );

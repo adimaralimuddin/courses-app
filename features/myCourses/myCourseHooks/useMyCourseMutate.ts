@@ -7,6 +7,7 @@ export default function useMyCourseMutate() {
   const qClient = useQueryClient();
   const add = useMutation(myCourseApiAddCourse, {
     onSuccess: (newCourse) => {
+      console.log("added", newCourse);
       qClient.invalidateQueries(["courses"]);
     },
   });

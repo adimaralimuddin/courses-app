@@ -11,7 +11,7 @@ export default function ModuleMain() {
   } = useRouter();
   const { data } = useModules(String(courseId));
   return (
-    <div className="">
+    <div className="min-h-[900px]">
       <ModuleListDivComp>
         {data?.map((module, ind) => (
           <ModuleItemComp module={module} key={module.id}>

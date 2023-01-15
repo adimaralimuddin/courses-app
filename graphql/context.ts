@@ -15,8 +15,8 @@ export interface AuthType {
   updated_at?: string;
   email?: string;
   email_verified?: false;
-  sub?: string;
-  sid?: string;
+  sub: string;
+  sid: string;
 }
 export type Context = {
   prisma: PrismaClient;
@@ -25,7 +25,7 @@ export type Context = {
   user: AuthType;
 };
 export async function createContext({ req, res }: Props): Promise<Context> {
-  let user_ = { sub: "auth0|63b5544bc7f88e767ac799d9" };
+  let user_ = { sub: "auth0|63c0e8173076de0e83751bc8" };
   const session = (await getSession(req, res)) as any;
 
   return {

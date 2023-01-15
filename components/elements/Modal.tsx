@@ -9,7 +9,7 @@ export default function Modal({ open, children: Children, set }: Props) {
   return (
     <div
       // onClick={() => set((p: boolean) => !p)}
-      className="fixed top-0 left-0 w-screen h-screen flex flex-col items-center justify-center"
+      className="fixed top-0 left-0 w-screen h-screen flex flex-col items-center justify-center bg-indigo-400 bg-opacity-50"
     >
       <button
         onClick={() => set((p: boolean) => !p)}

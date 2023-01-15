@@ -20,7 +20,7 @@ export default function Collapse({ state, Header, children }: Props) {
       </div>
       <div
         style={{ height: state_ ? "" : "0px" }}
-        className={"ring-1 overflow-hidden "}
+        className={" overflow-hidden "}
       >
         {children}
       </div>

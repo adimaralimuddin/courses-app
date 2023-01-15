@@ -1,5 +1,12 @@
 import React from "react";
+import LessonDetailComp from "../../../components/featureComps/lessonComps/lessonDetails/LessonDetailComp";
+import useLessonDetail from "../lessonHooks/useLessonDetail";
 
 export default function LessonDetailPage({ lessonid }: { lessonid: string }) {
-  return <div>LessonDetailPage</div>;
+  const { data: lesson } = useLessonDetail(lessonid);
+  return (
+    <div>
+      <LessonDetailComp lesson={lesson} />
+    </div>
+  );
 }

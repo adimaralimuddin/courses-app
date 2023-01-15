@@ -1,23 +1,32 @@
-import { useUser } from "@auth0/nextjs-auth0/client";
-import Link from "next/link";
-import React from "react";
+import React, { ReactNode } from "react";
+import AppLogo from "./AppLogo";
+import AppNav from "./AppNav";
+import AppUserMenu from "./AppUserMenu";
+import LayoutFooter from "./LayoutFooter";
 
-export default function LayoutMain({ children }: any) {
-  const { user } = useUser();
+export default function LayoutMain({
+  children,
+  Child1,
+  className,
+  headerClass,
+}: {
+  children: ReactNode;
+  Child1?: ReactNode;
+  className?: string;
+  headerClass?: string;
+}) {
   return (
-    <div className="bg-slate-800 tdext-white min-h-screen text-slate-300">
-      <div className="flex ring-1 p-2 gap-3 justify-between ">
-        <div className="flex gap-3 items-center">
-          {user && <p>{user?.email}</p>}
-          <small>{user?.sub}</small>
-          {!user && <Link href="/api/auth/login"> login</Link>}
-          {user && <Link href="/api/auth/logout"> logout</Link>}
+    <div className={" tdext-white min-h-screen " + className}>
+      <header className={"  " + headerClass}>
+        <div className=" flex p-3 gap-3 items-center max-w-7xl mx-auto bg-red-400d  ">
+          <AppLogo />
+          {Child1 && Child1}
+          <AppNav />
+          <AppUserMenu />
         </div>
-        <div className="flex items-center gap-3">
-          {user && <Link href="/my-courses"> my courses</Link>}
-        </div>
-      </div>
+      </header>
       {children}
+      <LayoutFooter />
     </div>
   );
 }

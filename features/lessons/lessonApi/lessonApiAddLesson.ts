@@ -10,6 +10,8 @@ export default async function lessonApiAddLesson(
     id
     index
     title
+    description
+
   }
 }
 `,

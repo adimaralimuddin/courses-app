@@ -1,21 +1,22 @@
+import ModuleType from "../../modules/ModuleTypes";
+import UserType from "../../users/userTypes/UserType";
+
 export interface CourseType {
   id?: string;
   title: string;
   imageUrl?: string;
   description?: string;
   price?: number;
-  free?: Boolean;
-  discount?: Number;
+  free?: boolean;
+  discount?: number;
   discountType?: string;
-  ratings?: Number;
+  ratings?: number;
   language?: string;
-  duration?: Number;
-  level?: Number;
+  duration?: number;
+  level?: number;
 
-  //   creator User @relation(fields: [creatorId],references: [id])
   creatorId: string;
-
-  //   students User[] @relation("subscription")
-
-  //   modules Module[]
+  students?: UserType[];
+  creator?: UserType;
+  modules?: ModuleType[];
 }

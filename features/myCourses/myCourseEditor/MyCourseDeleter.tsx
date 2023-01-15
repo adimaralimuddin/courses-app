@@ -12,7 +12,7 @@ export default function MyCourseDeleter({ courseId }: Props) {
     removeCourse(courseId);
   };
   return (
-    <div className="p-2 ring-2 rounded-xl">
+    <div className="">
       <button onClick={onRemoveHandler}>Delete</button>
     </div>
   );

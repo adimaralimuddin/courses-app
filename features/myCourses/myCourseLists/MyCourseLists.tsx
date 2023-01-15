@@ -8,8 +8,10 @@ interface Props {
 }
 export default function MyCourseLists({ courses }: Props) {
   return (
-    <div>
-      <MyCourseAdder />
+    <div className="p-3">
+      <div className="px-2 pb-2">
+        <MyCourseAdder />
+      </div>
       <CourseListsDivComp>
         {courses?.map((course) => (
           <MyCourseItem course={course} key={course.id} />

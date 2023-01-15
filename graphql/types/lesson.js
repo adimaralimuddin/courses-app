@@ -40,11 +40,21 @@ export const LessonQuery = extendType({
       },
     }); // lessons
 
+    // module lessons
     t.list.field("moduleLessons", {
       type: Lesson,
       args: { moduleId: nonNull(stringArg()) },
       resolve(par, { moduleId }, { prisma }) {
         return prisma.lesson.findMany({ where: { moduleId } });
+      },
+    }); // module lessons
+
+    //lesson detail
+    t.field("lessonDetail", {
+      type: Lesson,
+      args: { id: nonNull(stringArg()) },
+      resolve(par, { id }, { prisma }) {
+        return prisma.lesson.findUnique({ where: { id } });
       },
     });
   },

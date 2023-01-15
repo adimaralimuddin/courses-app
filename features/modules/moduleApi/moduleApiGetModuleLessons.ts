@@ -10,6 +10,7 @@ export default async function moduleApiGetModuleLessons(
     title
     id
     index
+    description
   }
 }`,
     { moduleId },

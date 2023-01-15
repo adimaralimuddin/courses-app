@@ -4,15 +4,21 @@ import type { AppProps } from "next/app";
 import LayoutMain from "../components/layout/LayoutMain";
 import "../styles/globals.css";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false, // default: true
+    },
+  },
+});
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <UserProvider>
       <QueryClientProvider client={queryClient}>
-        <LayoutMain>
-          <Component {...pageProps} />
-        </LayoutMain>
+        {/* <LayoutMain> */}
+        <Component {...pageProps} />
+        {/* </LayoutMain> */}
       </QueryClientProvider>
     </UserProvider>
   );

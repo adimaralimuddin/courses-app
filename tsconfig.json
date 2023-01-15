@@ -15,6 +15,13 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "lib/prisma.js", "graphql/context.ts", "graphql/types/lesson.js"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "lib/prisma.js",
+    "graphql/context.ts",
+    "graphql/types/lesson.js"
+  ],
   "exclude": ["node_modules"]
 }

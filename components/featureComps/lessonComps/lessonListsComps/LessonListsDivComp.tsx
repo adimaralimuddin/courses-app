@@ -7,8 +7,8 @@ interface Props {
 
 export default function LessonListsDivComp({ children, Adder }: Props) {
   return (
-    <div className="flex flex-col  bg-slate-700 gap-[1px] ">
-      {Adder && <div>{Adder}</div>}
+    <div className="flex flex-col   gap-[1px] bg-white bg-opacity-70 ">
+      {Adder && <div className="p-2">{Adder}</div>}
       <div className="flex-1">{children}</div>
     </div>
   );

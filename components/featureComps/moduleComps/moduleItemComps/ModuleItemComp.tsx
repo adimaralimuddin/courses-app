@@ -17,20 +17,20 @@ export default function ModuleItemComp({
   Deleter,
 }: Props) {
   return (
-    <div className="bg-slate-700 flex-row p-0 ring-1 rounded-lg overflow-hidden">
+    <div className=" flex-row p-0 ring-2 ring-rose-300d ring-slate-600 rounded-lg overflow-hidden  ">
       <Collapse
         Header={({ Toggle }: any) => (
-          <div className="flex gap-2 p-2">
+          <div className="flex gap-2 p-2 justify-between px-3 bg-white ">
             <Toggle />
-            <div className="flex items-center gap-3 justify-between ">
-              <p>
-                {module.title} {module.id}
-              </p>
-              <p>{module.duration}</p>
+            <div className="flex-1 flex flex-cold justify-between items-center px-1 ">
+              <h3 className="font-semibold text-[1.1rem] text-slate-700">
+                {module.title}
+              </h3>
+              <small>{"29 days" || module.duration}</small>
             </div>
             <div>
               {Updater && Updater}
-              {Deleter && Deleter}
+              {/* {Deleter && Deleter} */}
             </div>
           </div>
         )}

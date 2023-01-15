@@ -9,15 +9,18 @@ interface Props {
 }
 export default function LessonItemComp({ lesson, Editor, Deleter }: Props) {
   return (
-    <div className=" p-1 px-6 bg-slate-800 flex gap-2 justify-between ">
-      <div className="flex items-center gap-3">
-        <p>{lesson.title}</p>
-        <p>{lesson.description}</p>
-        <small>{lesson.id}</small>
+    <div className=" p-2 px-6 flex gap-2 justify-between border-t border-red-200d border-slate-300 min-h-[45px] ">
+      <div className="flex flex-col gap-3d items-centerd flex-1">
+        <p className="text-slate-700 text-[1rem]d font-[500]">
+          {lesson?.title}
+        </p>
+        {/* <small>{lesson?.description?.slice(0, 50)} </small> */}
       </div>
-      {Editor && Editor}
-      {Deleter && Deleter}
-      <Link href={"/my-lesson/" + lesson.id}>view</Link>
+      <div className="flex gap-3">
+        {Editor && Editor}
+        {Deleter && Deleter}
+        {/* <Link href={"/my-lesson/" + lesson.id}>view</Link> */}
+      </div>
     </div>
   );
 }

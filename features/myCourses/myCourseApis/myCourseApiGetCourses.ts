@@ -18,11 +18,8 @@ query Query($creatorId: String!) {
     discountType
     discount
     creatorId
-    creator {
-      avatar
-      id
-      name
-    }
+    imageUrl
+   
   }
 }
         `,

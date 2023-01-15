@@ -1,21 +1,31 @@
+import dynamic from "next/dynamic";
 import React from "react";
-import CourseItemComp from "../../../components/featureComps/courseComps/courseItemComps/CourseItemComp";
-import CourseQueryComp from "../../../components/featureComps/courseComps/courseQueryComps/CourseQueryComp";
-import CourseListsDivComp from "../../../components/featureComps/courseComps/courseSubComs/CourseListsDivComp";
+// import CoursesPagesComp from "../../../components/featureComps/courseComps/courseListsComps/CoursesPagesComp";
+import LayoutMain from "../../../components/layout/LayoutMain";
 import useCourses from "../courseHooks/useCourses";
 
-export default function CoursesPage() {
-  const { data } = useCourses();
+const CoursesPagesComp = dynamic(
+  () =>
+    import(
+      "../../../components/featureComps/courseComps/courseListsComps/CoursesPagesComp"
+    )
+);
 
+export default function CoursesPage() {
+  const { data, onPrev, onNext, onQuery, isLoading } = useCourses();
   return (
-    <div>
-      <CourseQueryComp courses={data}>
-        <CourseListsDivComp>
-          {data?.map((course) => (
-            <CourseItemComp course={course} key={course.id} />
-          ))}
-        </CourseListsDivComp>
-      </CourseQueryComp>
-    </div>
+    // <div>
+    <LayoutMain className="bg-primary-bg">
+      <CoursesPagesComp
+        courses={data?.courses}
+        hasNextPage={data?.hasNextPage}
+        hasPrevPage={data?.hasPrevPage}
+        isLoading={isLoading}
+        onNext={onNext}
+        onPrev={onPrev}
+        onQuery={onQuery}
+      />
+    </LayoutMain>
+    // </div>
   );
 }
