@@ -8,14 +8,14 @@ export default function AppNav() {
     <ul className="flex gap-4 items-center text-[1.1rem] px-6">
       <li className=" text-rose-400d font-semibold hover:text-rose-500">
         {
-          <Link href="/courses" prefetch={false}>
+          <Link href="/courses" prefetch={true}>
             Courses
           </Link>
         }
       </li>
       <li className=" text-rose-400d font-semibold hover:text-rose-500">
         {user && (
-          <Link href="/my-courses" prefetch={false}>
+          <Link href="/my-courses" prefetch={true}>
             My Course
           </Link>
         )}

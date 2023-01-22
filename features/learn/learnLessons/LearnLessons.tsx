@@ -1,21 +1,23 @@
+import { useRouter } from "next/router";
 import React from "react";
-import LearnLessonItemComp from "../../../components/featureComps/learnComps/learnItemComps/LearnLessonItemComp";
-import LearnLessonDivComp from "../../../components/featureComps/learnComps/learnMainComps/LearnLessonDivComp";
-import LearnModuleItemComp from "../../../components/featureComps/learnComps/learnMainComps/LearnModuleItemComp";
 import useLearn from "../learnHooks/useLearn";
+import LearnLessonItem from "../learnItems/LearnLessonItem";
 import LearnType from "../learnTypes/LearnType";
+import LearnLessonDiv from "./LearnLessonDiv";
+import LearnModuleItem from "./LearnModuleItem";
 interface Props {
   learn: LearnType | undefined;
   courseId: string;
 }
 export default function LearnLessons({ learn, courseId }: Props) {
   const { lesson: currentLesson, selectLesson } = useLearn(courseId);
+
   return (
-    <LearnLessonDivComp>
+    <LearnLessonDiv>
       {learn?.course?.modules?.map((module) => (
-        <LearnModuleItemComp module={module} key={module.id}>
+        <LearnModuleItem module={module} key={module.id}>
           {module?.lessons?.map((lesson, ind) => (
-            <LearnLessonItemComp
+            <LearnLessonItem
               onSelect={selectLesson}
               lesson={lesson}
               currentLesson={currentLesson}
@@ -24,8 +26,8 @@ export default function LearnLessons({ learn, courseId }: Props) {
               key={lesson.id}
             />
           ))}
-        </LearnModuleItemComp>
+        </LearnModuleItem>
       ))}
-    </LearnLessonDivComp>
+    </LearnLessonDiv>
   );
 }

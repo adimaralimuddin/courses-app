@@ -12,13 +12,6 @@ export default function useQnaMutate(
   const add = useMutation(qnaApiAddQna, {
     onSuccess: (addedQna) => {
       qClient.invalidateQueries(["qna-queries", courseId, lessonId]);
-
-      // qClient.setQueriesData(
-      //   ["qnas", lessonId],
-      //   (prev: QnaType[] | undefined = []) => {
-      //     return [...prev, addedQna];
-      //   }
-      // );
     },
   });
 
@@ -27,14 +20,7 @@ export default function useQnaMutate(
       console.log("id", lessonId);
       console.log("deleted ", deletedQna);
       qClient.invalidateQueries(["qna-queries", courseId, lessonId]);
-      // qClient.setQueriesData(
-      //   ["qna-queries", courseId, lessonId],
-      //   (prev: QnaType[] | undefined = []) => {
-      //     console.log("prev", prev);
-      //     return prev?.filter((q) => q.id !== deletedQna.id);
-      //   }
-      // );
     },
   });
-  return { addQna: add.mutate, removeQna: remove.mutate };
+  return { add, remove, addQna: add.mutate, removeQna: remove.mutate };
 }

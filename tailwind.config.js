@@ -20,12 +20,13 @@ module.exports = {
         fade: "fade 1s ",
         pop: "pop 1s cubic-bezier(0.390, 0.575, 0.565, 1.000) both",
         out: "out 1s",
+        slideleft: "slideleft 0.5s both",
       },
       keyframes: {
-        // sidepop: {
-        //   "0%": { opacity: "100%", transform: "scale(1)" },
-        //   "100%": { opacity: "0%", transform: "scale(0)" },
-        // },
+        slideleft: {
+          "0%": { opacity: "0%", transform: "translateX(100px)" },
+          "100%": { opacity: "100%", transform: "translateX(0px)" },
+        },
         fade: {
           "0%": { opacity: "100%", transform: "scale(1)" },
           "100%": { opacity: "0%", transform: "scale(0)" },

@@ -31,16 +31,20 @@ createdAt DateTime @default(now())
 model Course {
   id String @id @default(cuid())
   title String 
-  imageUrl String? 
   description String?
+  imageUrl String? 
   price Int? 
   free Boolean @default(false)
   discount Int?
   discountType String?
-  ratings Int?
-  language String? @default("english")
+  
+  language String[] @default(["english"])
+  category String[]
   duration Int?
   level Int? @default(5)
+  
+  toLearn String[]
+  rerequisites String[]
 
   creator User @relation(fields: [creatorId],references: [id])
   creatorId String
@@ -50,10 +54,21 @@ model Course {
   learns Learn[]
   qnas Qna[] 
   notes Note[] 
+  ratings Rating[]
+
 
   updatedAt DateTime?
   createdAt DateTime @default(now())
 
+}
+
+model Rating {
+  id String @id @default(cuid())
+  text String
+  value Int
+
+  course Course @relation(references: [id],fields: [courseId])
+  courseId String
 }
 
 model Learn {
@@ -66,7 +81,7 @@ model Learn {
   currentLessonId String?
 
   user User @relation(fields: [userId], references: [id])
-  course Course @relation(fields: [courseId], references: [id])
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   updatedAt DateTime?
   createdAt DateTime @default(now())
@@ -79,7 +94,7 @@ model Module {
   title String 
   duration String? 
 
-  course Course @relation(fields: [courseId], references: [id])
+  course Course @relation(fields: [courseId], references: [id],onDelete: Cascade)
   courseId String
 
   lessons Lesson[]
@@ -96,7 +111,7 @@ model Lesson {
   videoUrl String? 
   preview Boolean @default(false)
 
-  module Module @relation(fields: [moduleId],references: [id])
+  module Module @relation(fields: [moduleId],references: [id],onDelete: Cascade)
   moduleId String 
 
   qnas Qna[]

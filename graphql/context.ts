@@ -25,7 +25,7 @@ export type Context = {
   user: AuthType;
 };
 export async function createContext({ req, res }: Props): Promise<Context> {
-  let user_ = { sub: "auth0|63c0e8173076de0e83751bc8" };
+  let user_ = { sub: "google-oauth2|111433114037051853861" };
   const session = (await getSession(req, res)) as any;
 
   return {

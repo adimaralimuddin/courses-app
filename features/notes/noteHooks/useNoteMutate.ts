@@ -10,12 +10,7 @@ export default function useNoteMutate(
   const qClient = useQueryClient();
   const add = useMutation(noteApiAddNote, {
     onSuccess: (addedNote) => {
-      qClient.setQueriesData(
-        ["notes", lessonId],
-        (prev: NoteType[] | undefined = []) => {
-          return [...prev, addedNote];
-        }
-      );
+      qClient.invalidateQueries(["note-queries", courseId, lessonId]);
     },
   });
 
@@ -23,14 +18,8 @@ export default function useNoteMutate(
     onSuccess: (deletedNote) => {
       console.log("id", lessonId);
       console.log("deleted ", deletedNote);
-      qClient.setQueriesData(
-        ["notes", lessonId],
-        (prev: NoteType[] | undefined = []) => {
-          console.log("prev", prev);
-          return prev?.filter((q) => q.id !== deletedNote.id);
-        }
-      );
+      qClient.invalidateQueries(["note-queries", courseId, lessonId]);
     },
   });
-  return { addNote: add.mutate, removeNote: remove.mutate };
+  return { add, remove, addNote: add.mutate, removeNote: remove.mutate };
 }

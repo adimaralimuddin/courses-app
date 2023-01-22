@@ -1,13 +1,4 @@
 import React from "react";
-// type Props = {
-//   options: [string, string | number | boolean | undefined][] | string[];
-//   className?: string;
-//   text?: string;
-//   type?: string;
-//   name?: string;
-// };
-
-type Option = [string, string | number | boolean];
 
 export default function Select({
   options,
@@ -20,15 +11,15 @@ export default function Select({
   ...props
 }: any) {
   return (
-    <div className={" flex  flex-col flex-1  gap-1 p-1 " + className}>
+    <div className={" flex  flex-col flex-1  gap-2  " + className}>
       {text && (
-        <label className="text-slate-600 text-[.9rem]" htmlFor={name || text}>
+        <label className="text-slate-600 text-[1.1rem]" htmlFor={name || text}>
           {text}
         </label>
       )}
       <select
         {...props}
-        className={`w-full min-w-[50px] p-1 px-2 ring-[${outline}px] rounded-lg ring-primary-main `}
+        className={`w-full min-w-[50px] p-2 px-3 border-2 rounded-xl  ring-primary-maind outline-slate-700 `}
         name={name || text}
       >
         {children}

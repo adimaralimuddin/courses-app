@@ -3,5 +3,5 @@ export type LearnQueryType = {
   text: string;
   sort: "latest" | "oldest";
   lesson: "all" | "current";
-  question: "all" | "my";
+  list: "all" | "my";
 };

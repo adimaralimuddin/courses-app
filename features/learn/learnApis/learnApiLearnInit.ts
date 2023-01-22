@@ -3,43 +3,31 @@ import gqlFetch from "../../api/gqlFetch";
 export default function learnApiLearnInit(courseId: string | undefined) {
   return gqlFetch(
     `
-   query Learn($courseId: String!) {
+  query Learn($courseId: String!) {
   learn(courseId: $courseId) {
-    userId
-    doneLesson
-    done
-    currentLessonId
-    courseId
     course {
-      description
-      discount
-      discountType
-      duration
-      free
-      id
-      imageUrl
-      language
-      level
-      price
-      ratings
       title
-      creatorId
+      duration
       modules {
-        courseId
-        duration
         id
         title
+        duration
         lessons {
-          description
+          id
           index
-          moduleId
-          preview
+          description
           title
           videoUrl
-          id
+          preview
+          moduleId
         }
       }
     }
+    currentLessonId
+    done
+    doneLesson
+    userId
+    courseId
   }
 }
     `,

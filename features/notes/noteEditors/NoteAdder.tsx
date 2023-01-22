@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Modal from "../../../components/elements/Modal";
-import QnaEditorComp from "../../../components/featureComps/qnaComps/qnaEditorComps/QnaEditorComp";
+import ModalDiv from "../../../components/elements/ModalDiv";
+import ListItemEditorComp from "../../learn/learnEditor/ListItemEditorComp";
+
 import useNoteMutate from "../noteHooks/useNoteMutate";
 interface Props {
   lessonId: string | undefined;
@@ -9,7 +11,7 @@ interface Props {
 export default function NoteAdder({ lessonId, courseId }: Props) {
   const [open, setOpen] = useState(false);
 
-  const { addNote } = useNoteMutate(lessonId, courseId);
+  const { addNote, add } = useNoteMutate(lessonId, courseId);
 
   const onAdd = (text: string) => {
     if (lessonId) {
@@ -28,7 +30,13 @@ export default function NoteAdder({ lessonId, courseId }: Props) {
         Add a Note
       </button>
       <Modal open={open} set={setOpen}>
-        <QnaEditorComp onDone={onAdd} />
+        <ModalDiv>
+          <ListItemEditorComp
+            text="Note"
+            isAdding={add?.isLoading}
+            onDone={onAdd}
+          />
+        </ModalDiv>
       </Modal>
     </div>
   );

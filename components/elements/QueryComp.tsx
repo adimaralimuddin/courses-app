@@ -1,4 +1,6 @@
-import React, { ChangeEvent, ReactNode } from "react";
+import React, { ChangeEvent, KeyboardEvent, ReactNode } from "react";
+import FilterSelectItem from "./FilterSelectItem";
+import InputSearch from "./InputSearch";
 export type FilterType = [string, string | boolean | number];
 export interface FilterItemType {
   text: string;
@@ -35,36 +37,6 @@ export default function QueryComp({
   hasPrevPage,
   setOpen,
 }: Props) {
-  function SelectItem({
-    name,
-    onChange,
-    text,
-    value,
-    options,
-  }: FilterItemType) {
-    return (
-      <div className="flex flex-col">
-        <label htmlFor={name} className="px-1 leading-3">
-          <small>{text}</small>
-        </label>
-        <select
-          name={name}
-          className="bg-transparent text-slate-600 font-semibold "
-          value={value?.toString()}
-          onChange={(e) => {
-            onChange(e.target.value, text);
-            onSearch();
-          }}
-        >
-          {options?.map((option) => (
-            <option value={option?.[0]} key={option?.[0]}>
-              {option?.[1]}
-            </option>
-          ))}
-        </select>
-      </div>
-    );
-  }
   let time: any;
 
   return (
@@ -79,41 +51,15 @@ export default function QueryComp({
           >
             Fileters
           </button>
-          <form
-            className="flex overflow-hidden max-w-md flex-1 min-w-[150px] "
-            onClick={(e) => {
-              e.preventDefault();
-              onSearch();
-            }}
-          >
-            <input
-              className=" text-slate-600d bg-rose-50 ring-2 ring-slate-600 text-whited rounded-full w-full outline-none bg-transparent overflow-auto m-1 p-1 px-3"
-              placeholder={"search " + (filter ? "by " + filter : "")}
-              value={value}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                onChange(e.target.value);
-                if (e.target.value?.trim() == "") {
-                  onSearch();
-                }
-                if (time) {
-                  clearTimeout(time);
-                }
-                time = setTimeout(() => {
-                  if (e.target.value?.trim()?.slice(0, -1) == value) {
-                    // onSearch();
-                  }
-                }, 1000);
-              }}
-              type="text"
-            />
-            <button
-              type="submit"
-              className="bg-primary-maind text-white px-3d ring-1d"
-            ></button>
-          </form>
+          <InputSearch
+            onChange={onChange}
+            value={value}
+            filter={filter}
+            onSearch={onSearch}
+          />
 
           {filterItems?.map((item) => (
-            <SelectItem
+            <FilterSelectItem
               options={item?.options}
               name={item?.name}
               text={item?.text}

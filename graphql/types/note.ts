@@ -1,13 +1,29 @@
 import { extendType, nonNull, objectType, stringArg } from "nexus";
+import { DateTime } from "./customs";
+import { User } from "./user";
 
 export const Note = objectType({
   name: "Note",
   definition(t) {
     t.string("id");
-    t.string("userId");
-    t.string("lessonId");
     t.string("text");
-    t.string("time");
+
+    t.string("userId");
+    t.field("user", { type: User });
+
+    t.string("lessonId");
+    t.string("courseId");
+
+    t.field("createdAt", { type: DateTime });
+  },
+});
+
+export const NotePage = objectType({
+  name: "NotePage",
+  definition(t) {
+    t.list.field("notes", { type: Note });
+    t.boolean("hasNextPage");
+    t.boolean("hasPrevPage");
   },
 });
 
@@ -26,6 +42,52 @@ export const NoteQuery = extendType({
         });
       },
     }); // notes
+
+    // qna queries
+    t.field("noteQuery", {
+      type: NotePage,
+      args: {
+        cursor: stringArg(),
+        courseId: nonNull(stringArg()),
+        text: nonNull(stringArg()),
+        sort: nonNull(stringArg()),
+        lesson: nonNull(stringArg()),
+        lessonId: nonNull(stringArg()),
+        list: nonNull(stringArg()),
+      },
+      async resolve(
+        par,
+        { cursor, courseId, text, sort, lesson, lessonId, list },
+        { prisma, user }
+      ) {
+        console.log({ text, sort, lesson, list, cursor });
+        const notes = await prisma.note.findMany({
+          where: {
+            courseId,
+            lessonId: lesson == "all" ? undefined : lessonId,
+            userId: list == "all" ? undefined : user.sub,
+            text: { contains: text },
+          },
+          orderBy: {
+            createdAt: sort == "oldest" ? "asc" : "desc",
+          },
+          include: {
+            user: true,
+          },
+          // take: text?.trim() == "" ? 3 : undefined,
+          take: 3,
+          skip: cursor ? 1 : undefined,
+          cursor: cursor ? { id: cursor } : undefined,
+        });
+
+        console.log("notes ============================= ", notes);
+        return {
+          notes: notes?.length < 3 ? notes : notes?.slice(0, -1),
+          hasNextPage: notes?.length < 3 ? false : true,
+          hasPrevPage: true,
+        };
+      },
+    }); // qna queries
   },
 });
 
@@ -57,7 +119,7 @@ export const NoteMutation = extendType({
     });
 
     //update qna
-    t.field("updateQna", {
+    t.field("updateNote", {
       type: Note,
       args: {
         id: nonNull(stringArg()),

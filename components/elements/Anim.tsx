@@ -3,13 +3,13 @@ import { ReactNode, useEffect, useState } from "react";
 interface Props {
   children: ReactNode;
   open: boolean;
-  state: [string, string];
+  state?: [string, string];
   className?: string;
 }
 export default function Anim({
   children,
   open,
-  state = ["", ""],
+  state = [" anim-mount ", " anim-unmount "],
   className = "",
 }: Props) {
   const [end, setEnded] = useState(!open);
@@ -18,7 +18,9 @@ export default function Anim({
       setEnded(false);
     }
   }, [open]);
+
   const isOpen = (a = "", b = "") => (open ? a : b);
+
   if (end) {
     return null;
   }

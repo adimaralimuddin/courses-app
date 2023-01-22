@@ -3,6 +3,8 @@
 
 
 type Course {
+  _count: CourseCount
+  createdAt: DateTime
   creator: User
   creatorId: String
   description: String
@@ -12,14 +14,20 @@ type Course {
   free: Boolean
   id: String
   imageUrl: String
-  language: String
+  language: [String]
   learn: [Learn]
   level: Int
   modules: [Module]
   price: Int
-  ratings: Int
+  ratings: [Rating]
   students: [User]
   title: String
+}
+
+type CourseCount {
+  learn: Int
+  modules: Int
+  students: Int
 }
 
 type CoursePage {
@@ -60,7 +68,7 @@ type Module {
 }
 
 type Mutation {
-  addCourse(creatorId: String!, description: String, discount: Int, discountType: String, duration: Int, free: Boolean, imageUrl: String, language: String, level: Int, price: Int, ratings: Int, title: String!): Course
+  addCourse(description: String, discount: Int, discountType: String, duration: Int, free: Boolean, imageUrl: String, language: [String]!, level: Int, price: Int, title: String!): Course
   addLesson(description: String, moduleId: String!, preview: Boolean, title: String!, videoUrl: String): Lesson
   addModule(courseId: String!, duration: String, title: String!): Module
   addNote(courseId: String!, lessonId: String!, text: String!): Note
@@ -68,21 +76,32 @@ type Mutation {
   courseBuy(courseId: String!): Course
   courseUnBuy(courseId: String!): Course
   deleteCourse(id: String!): Course
+  deleteModule(id: String!): Module
   deleteNote(id: String!): Note
   deleteQna(id: String!): Qna
   delteLesson(id: String!): Lesson
   learnNext(courseId: String!, currentLessonId: String!): Learn
-  updateCourse(description: String, discount: Int, discountType: String, duration: Int, free: Boolean, id: String!, imageUrl: String, language: String, level: Int, price: Int, ratings: Int, title: String!): Course
+  updateCourse(description: String, discount: Int, discountType: String, free: Boolean, id: String!, imageUrl: String, language: [String]!, level: Int, price: Int, title: String!): Course
   updateLesson(description: String, id: String!, preview: Boolean, title: String!, videoUrl: String): Lesson
+  updateModule(duration: String, id: String!, title: String!): Module
+  updateNote(id: String!, text: String!): Note
   updateQna(id: String!, text: String!): Qna
 }
 
 type Note {
+  courseId: String
+  createdAt: DateTime
   id: String
   lessonId: String
   text: String
-  time: String
+  user: User
   userId: String
+}
+
+type NotePage {
+  hasNextPage: Boolean
+  hasPrevPage: Boolean
+  notes: [Note]
 }
 
 type Qna {
@@ -103,8 +122,11 @@ type QnaPage {
 }
 
 type Query {
+  check(courseId: String!): Learn
   course(id: String!): Course
+  courseStudent(courseId: String!): Course
   courses: [Course]
+  initLearn(courseId: String!): Lesson
   learn(courseId: String!): Learn
   lessonDetail(id: String!): Lesson
   lessons: [Lesson]
@@ -112,14 +134,23 @@ type Query {
   modules(courseId: String!): [Module]
   myCourse(id: String!): Course
   myCourses(creatorId: String!): [Course]
+  noteQuery(courseId: String!, cursor: String, lesson: String!, lessonId: String!, list: String!, sort: String!, text: String!): NotePage
   notes(lessonId: String!): [Note]
-  qnaQuery(courseId: String!, cursor: String, lesson: String!, lessonId: String!, question: String!, sort: String!, text: String!): QnaPage
+  qnaQuery(courseId: String!, cursor: String, lesson: String!, lessonId: String!, list: String!, sort: String!, text: String!): QnaPage
   qnas(lessonId: String!): [Qna]
-  queryCourse(cursor: String, discount: Int, duration: Int, filter: String!, free: Boolean, language: String, level: Int, order: String!, price: Int, queryDirection: Int, ratings: Int, sort: String, text: String!): CoursePage
-  queryMyCourse(cursor: String, discount: Int, duration: Int, filter: String!, free: Boolean, language: String, level: Int, order: String!, price: Int, queryDirection: Int, ratings: Int, sort: String, text: String!): CoursePage
+  queryCourse(cateogry: String, cursor: String, duration: Int, filter: String!, free: Boolean, language: String, level: Int, order: String!, price: Int, queryDirection: Int, sort: String, text: String!): CoursePage
+  queryMyCourse(cateogry: String, cursor: String, duration: Int, filter: String!, free: Boolean, language: String, level: Int, order: String!, price: Int, queryDirection: Int, sort: String, text: String!): CoursePage
   replies(qnaId: String!): [Reply]
   user(id: String!): User
   users: [User]
+}
+
+type Rating {
+  course: Course
+  courseId: String
+  id: String
+  text: String
+  value: Int
 }
 
 type Reply {

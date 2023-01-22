@@ -50,6 +50,7 @@ export const QnaQuery = extendType({
       },
     }); // qnas
 
+    // qna queries
     t.field("qnaQuery", {
       type: QnaPage,
       args: {
@@ -59,19 +60,19 @@ export const QnaQuery = extendType({
         sort: nonNull(stringArg()),
         lesson: nonNull(stringArg()),
         lessonId: nonNull(stringArg()),
-        question: nonNull(stringArg()),
+        list: nonNull(stringArg()),
       },
       async resolve(
         par,
-        { cursor, courseId, text, sort, lesson, lessonId, question },
+        { cursor, courseId, text, sort, lesson, lessonId, list },
         { prisma, user }
       ) {
-        console.log({ text, sort, lesson, question, cursor });
+        console.log({ text, sort, lesson, list, cursor });
         const qnas = await prisma.qna.findMany({
           where: {
             courseId,
             lessonId: lesson == "all" ? undefined : lessonId,
-            userId: question == "all" ? undefined : user.sub,
+            userId: list == "all" ? undefined : user.sub,
             text: { contains: text },
           },
           orderBy: {
@@ -93,7 +94,7 @@ export const QnaQuery = extendType({
           hasPrevPage: true,
         };
       },
-    });
+    }); // qna queries
   },
 });
 

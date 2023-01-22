@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import MyCourseDetailPage from "../../../features/myCourses/myCourseDetail/MyCourseDetailPage";
+import MyCourseDetailPage from "../../../features/courses/courseDetail/courseDetailPage/MyCourseDetailPage";
 
 export default MyCourseDetailPage;
 

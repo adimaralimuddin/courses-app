@@ -11,12 +11,20 @@ export interface CourseType {
   discount?: number;
   discountType?: string;
   ratings?: number;
-  language?: string;
+  language?: string[];
   duration?: number;
   level?: number;
 
-  creatorId: string;
+  creatorId?: string;
   students?: UserType[];
   creator?: UserType;
   modules?: ModuleType[];
+
+  createdAt?: Date;
+
+  _count?: {
+    students?: number | null;
+    ratings?: number | null;
+    modules?: number | null;
+  };
 }

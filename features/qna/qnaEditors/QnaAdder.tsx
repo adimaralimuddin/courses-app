@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Modal from "../../../components/elements/Modal";
-import QnaEditorComp from "../../../components/featureComps/qnaComps/qnaEditorComps/QnaEditorComp";
+import ModalDiv from "../../../components/elements/ModalDiv";
+import ListItemEditorComp from "../../learn/learnEditor/ListItemEditorComp";
+
 import useQnaMutate from "../qnaHooks/useQnaMutate";
 interface Props {
   lessonId: string | undefined;
@@ -9,7 +11,7 @@ interface Props {
 export default function QnaAdder({ lessonId, courseId }: Props) {
   const [open, setOpen] = useState(false);
 
-  const { addQna } = useQnaMutate(lessonId, courseId);
+  const { addQna, add } = useQnaMutate(lessonId, courseId);
 
   const onAdd = (text: string) => {
     if (lessonId && courseId) {
@@ -28,7 +30,13 @@ export default function QnaAdder({ lessonId, courseId }: Props) {
         Add a Question
       </button>
       <Modal open={open} set={setOpen}>
-        <QnaEditorComp onDone={onAdd} />
+        <ModalDiv>
+          <ListItemEditorComp
+            text="Qna"
+            isAdding={add.isLoading}
+            onDone={onAdd}
+          />
+        </ModalDiv>
       </Modal>
     </div>
   );

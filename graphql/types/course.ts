@@ -1,4 +1,3 @@
-import { Prisma } from "@prisma/client";
 import {
   booleanArg,
   extendType,
@@ -7,7 +6,10 @@ import {
   objectType,
   stringArg,
 } from "nexus";
+import { resolve } from "path";
+import { DateTime } from "./customs";
 import { Learn } from "./learn";
+import { Module } from "./module";
 import { User } from "./user";
 
 export const Course = objectType({
@@ -15,38 +17,46 @@ export const Course = objectType({
   definition(t) {
     t.string("id");
     t.string("title");
-    t.string("imageUrl");
     t.string("description");
+    t.string("imageUrl");
     t.int("price");
     t.boolean("free");
     t.int("discount");
     t.string("discountType");
-    t.int("ratings");
-    t.string("language");
-    t.string("modules");
-    t.int("duration");
+    t.list.string("language");
     t.int("level");
+    t.int("duration");
 
-    // user
     t.string("creatorId");
-    t.field("creator", {
-      type: User,
-    });
+    t.field("creator", { type: User });
 
-    // modules
-    t.list.field("modules", {
-      type: "Module",
-    });
+    t.list.field("modules", { type: Module });
+    t.list.field("students", { type: User });
+    t.list.field("ratings", { type: Rating });
+    t.list.field("learn", { type: Learn });
+    t.field("_count", { type: CourseCount });
 
-    // students
-    t.list.field("students", {
-      type: User,
-    });
+    t.field("createdAt", { type: DateTime });
+  },
+});
 
-    // learns
-    t.list.field("learn", {
-      type: Learn,
-    });
+export const Rating = objectType({
+  name: "Rating",
+  definition(t) {
+    t.string("id");
+    t.string("text");
+    t.int("value");
+    t.field("course", { type: Course });
+    t.string("courseId");
+  },
+});
+
+export const CourseCount = objectType({
+  name: "CourseCount",
+  definition(t) {
+    t.int("students");
+    t.int("learn");
+    t.int("modules");
   },
 });
 
@@ -62,37 +72,35 @@ export const CoursePage = objectType({
 export const CourseQuery = extendType({
   type: "Query",
   definition(t) {
-    // course
+    // course - course-detail-page
     t.field("course", {
       type: Course,
       args: { id: nonNull(stringArg()) },
       resolve(par, { id }, { prisma, user }) {
-        console.log("user ", user);
+        console.log("user hello", user);
         return prisma.course.findUnique({
           where: { id },
           select: {
             id: true,
-            creatorId: true,
             title: true,
+            imageUrl: true,
             description: true,
-            imageUrl: false,
+            price: true,
+            free: true,
             discount: true,
             discountType: true,
-            duration: true,
-            free: true,
-            language: true,
-            level: true,
-            price: true,
-            ratings: true,
-            creator: true,
-            // modules will not be included
 
-            // students
-            students: {
-              where: { id: user.sub },
+            language: true,
+            duration: true,
+            level: true,
+
+            category: true,
+            createdAt: true,
+
+            _count: {
               select: {
-                id: true,
-                name: true,
+                students: true,
+                ratings: true,
               },
             },
           },
@@ -108,56 +116,68 @@ export const CourseQuery = extendType({
       },
     }); // courses
 
+    // course students
+    t.field("courseStudent", {
+      type: Course,
+      args: { courseId: nonNull(stringArg()) },
+      async resolve(par, { courseId }, { prisma }) {
+        const x = await prisma.course.findFirst({
+          where: { id: courseId },
+          select: {
+            _count: {
+              select: {
+                students: true,
+              },
+            },
+          },
+        });
+
+        console.log("x", x);
+        return x;
+      },
+    });
+
+    const QueryCourseArgs = {
+      filter: nonNull(stringArg()),
+      text: nonNull(stringArg()),
+      order: nonNull(stringArg()),
+      sort: stringArg(),
+      cursor: stringArg(),
+      queryDirection: intArg(),
+
+      // properties
+      price: intArg(),
+      free: booleanArg(),
+      language: stringArg(),
+      cateogry: stringArg(),
+      duration: intArg(),
+      level: intArg(),
+    };
+
     // query courses
     t.field("queryCourse", {
       type: CoursePage,
-      args: {
-        filter: nonNull(stringArg()),
-        text: nonNull(stringArg()),
-        order: nonNull(stringArg()),
-        sort: stringArg(),
-        price: intArg(),
-        free: booleanArg(),
-        discount: intArg(),
-        ratings: intArg(),
-        language: stringArg(),
-        duration: intArg(),
-        level: intArg(),
-        cursor: stringArg(),
-        queryDirection: intArg(),
-      },
+      args: QueryCourseArgs,
       async resolve(par, args, { prisma, user }) {
         console.log("args ", args);
-        const dynamicFields: any = {};
         const count = 8;
-
-        if (args?.free !== null) {
-          dynamicFields.free = args.free;
-        }
-        if (args?.language !== null) {
-          dynamicFields.language = {
-            contains: args.language?.trim(),
-          };
-        }
-        if (args?.level !== 0 && args?.level) {
-          dynamicFields.level = args.level;
-        }
 
         const { cursor, queryDirection: dir } = args;
         const text = args?.text?.trim();
-        console.log("here now === ", { cursor, dir, text });
+        // console.log("here now === ", { cursor, dir, text });
 
         const courses: any = await prisma.course.findMany({
           where: {
             [args.filter]: {
-              contains: args.text?.trim(),
+              contains: text,
               mode: "insensitive",
             },
             price: { lte: args?.price ? args?.price : 500 },
-            discount: { lte: args?.discount || 100 },
-            ratings: { lte: args?.ratings || 999999 },
             duration: { lte: args?.duration || 360 },
-            ...dynamicFields,
+            free: args.free !== null ? args?.free : undefined,
+            level: args?.level !== 0 && args?.level ? args.level : undefined,
+            language: args?.language ? { has: args?.language } : undefined,
+            category: args?.cateogry ? { has: args?.cateogry } : undefined,
           },
           orderBy: {
             [args.order]: args.sort,
@@ -168,7 +188,6 @@ export const CourseQuery = extendType({
           cursor: cursor && text == "" ? { id: cursor } : undefined,
           skip: text !== "" || !cursor ? 0 : 1,
           take: text !== "" ? undefined : dir == 1 ? count : -count,
-          // text !== "" ? undefined :
         }); // prisma end
 
         console.log("length", courses?.length);
@@ -183,13 +202,32 @@ export const CourseQuery = extendType({
                 : courses.slice(1)
               : courses,
           hasNextPage:
-            length > count - 1 || args.queryDirection == 0 || !args.cursor
+            length > count - 1 || args?.queryDirection == 0 || !args?.cursor
               ? true
               : false,
           hasPrevPage:
-            length > count - 1 || args.queryDirection == 1 ? true : false,
+            length > count - 1 || args?.queryDirection == 1 ? true : false,
         };
       },
     }); // query courses ends
+
+    t.field("check", {
+      type: Learn,
+      args: {
+        courseId: nonNull(stringArg()),
+      },
+      async resolve(par, { courseId }, { prisma, user }) {
+        const x = await prisma.learn.findUnique({
+          where: {
+            userId_courseId: {
+              courseId,
+              userId: user?.sub,
+            },
+          },
+        });
+        console.log("x");
+        return x;
+      },
+    });
   },
 });

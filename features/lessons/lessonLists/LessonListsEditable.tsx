@@ -1,8 +1,8 @@
 import React from "react";
-import LessonListsDivComp from "../../../components/featureComps/lessonComps/lessonListsComps/LessonListsDivComp";
 import LessonAdder from "../lessonEditor/LessonAdder";
 import useLessonModuleLesson from "../lessonHooks/useLessonModuleLessons";
-import LessonItemEditable from "../lessonItem/LessonItemEditable";
+import LessonItemEditable from "./LessonItemEditable";
+import LessonListDiv from "./LessonListDiv";
 interface Props {
   moduleId: string | undefined;
 }
@@ -10,10 +10,12 @@ export default function LessonListsEditable({ moduleId }: Props) {
   const { data } = useLessonModuleLesson(moduleId);
 
   return (
-    <LessonListsDivComp Adder={<LessonAdder moduleId={moduleId} />}>
+    <LessonListDiv Adder={<LessonAdder moduleId={moduleId} />}>
       {data?.map((lesson) => (
-        <LessonItemEditable lesson={lesson} key={lesson.id} />
+        <div className="hover:bg-slate-100 " key={lesson.id}>
+          <LessonItemEditable moduleId={moduleId} lesson={lesson} />
+        </div>
       ))}
-    </LessonListsDivComp>
+    </LessonListDiv>
   );
 }

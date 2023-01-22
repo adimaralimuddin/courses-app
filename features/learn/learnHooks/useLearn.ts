@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { isArray } from "nexus/dist/utils";
+import { useRouter } from "next/router";
+// import { isArray } from "nexus/dist/utils";
 import LessonType from "../../lessons/LessonsTypes/LessonType";
 import learnApiLearnInit from "../learnApis/learnApiLearnInit";
 import learnApiNextLern from "../learnApis/learnApiNextLearn";
@@ -8,11 +9,38 @@ import LearnType from "../learnTypes/LearnType";
 
 export default function useLearn(courseId: string | undefined) {
   const { set, ...states } = LearnState((state) => state);
+  const { query } = useRouter();
   const c = useQueryClient();
-  const query = useQuery<LearnType>(
+
+  const learnQuery = useQuery<LearnType>(
     ["learn", courseId],
     () => learnApiLearnInit(courseId),
     {
+      initialData: () => {
+        const y: LearnType = {
+          course: {
+            title: "",
+            modules: [
+              {
+                title: "",
+                lessons: [
+                  {
+                    id: String(query?.id),
+                    title: String(query?.title),
+                    description: String(query?.description),
+                    videoUrl: String(query?.videoUrl),
+                  },
+                ],
+              },
+            ],
+          },
+          courseId: String(courseId),
+          currentLessonId: String(courseId),
+          done: true,
+          userId: "",
+        };
+        return y;
+      },
       onSuccess: (learnData) => {
         const lessons = learnData?.course?.modules
           ?.map((module) => module?.lessons?.map((lesson) => lesson))
@@ -23,8 +51,6 @@ export default function useLearn(courseId: string | undefined) {
         } else {
           lesson = lessons?.[0];
         }
-
-        // console.log("final lesson", lesson);
         set({ lesson, lessons });
       },
     }
@@ -60,5 +86,5 @@ export default function useLearn(courseId: string | undefined) {
     }
   };
 
-  return { ...query, ...states, selectLesson, nextLesson };
+  return { ...learnQuery, ...states, selectLesson, nextLesson };
 }

@@ -11,19 +11,25 @@ const options: FilterType[] = [
 
 export default function useCoursesQuery() {
   const { set, ...states } = CourseState((state) => state);
-  const {
-    filter,
-    text,
-    sort,
-    order,
-    price,
-    discount,
-    ratings,
-    duration,
-    level,
-    language,
-    free,
-  } = states;
+  const { filter, sort, order } = states;
+
+  function reset() {
+    set({
+      filter: "title",
+      text: "",
+      sort: "asc",
+      cursor: null,
+      queryDirection: 1,
+
+      order: "title",
+      language: null,
+      category: "",
+      price: undefined,
+      duration: undefined,
+      level: null,
+      free: null,
+    });
+  }
 
   const filterItems: FilterItemType[] = [
     {
@@ -32,7 +38,6 @@ export default function useCoursesQuery() {
       value: filter,
       options: options,
       onChange: (value: string | number | boolean) => {
-        console.log("sort", value);
         set({ filter: value?.toString() });
       },
     },
@@ -42,7 +47,6 @@ export default function useCoursesQuery() {
       value: order,
       options: options,
       onChange: (value: string | number | boolean) => {
-        console.log("order", value);
         set({ order: value?.toString() });
       },
     },
@@ -55,7 +59,6 @@ export default function useCoursesQuery() {
         ["desc", "desc"],
       ],
       onChange: (value: string | number | boolean) => {
-        console.log("sort", value);
         set({ sort: value?.toString() });
       },
     },
@@ -64,6 +67,7 @@ export default function useCoursesQuery() {
   return {
     set,
     ...states,
+    reset,
     filterItems,
     options,
   };

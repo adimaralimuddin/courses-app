@@ -11,13 +11,13 @@ export default function Input({
   return (
     <div
       className={
-        ` flex items-start justify-startd bg-red-400d  flex-1 ${col}  gap-2 p-1 ` +
+        ` flex items-start justify-startd bg-red-400d  flex-1 ${col}  gap-2  ` +
         className
       }
     >
       {text && (
         <label
-          className="text-slate-600 text-[.9rem] whitespace-nowrap "
+          className="text-slate-600 text-[1.1rem] whitespace-nowrap "
           htmlFor={name || text}
         >
           {text}
@@ -25,9 +25,8 @@ export default function Input({
       )}
       <input
         {...props}
-        className="w-full min-w-[50px] p-1 px-2 ring-[2px]d border-b-2 rounded-lg ring-primary-main bg-transparentd "
+        className="w-full disabled:cursor-not-allowed min-w-[50px] p-2 px-3 ring-[2px]d border-b-2d border-2 rounded-xl ring-primary-main bg-transparentd "
         type={type || "text"}
-        // type={'number'}
         name={name || text}
       />
     </div>

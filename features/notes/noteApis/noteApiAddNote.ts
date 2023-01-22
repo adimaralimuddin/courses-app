@@ -8,12 +8,15 @@ export default async function noteApiAddNote(args: {
 }): Promise<NoteType> {
   return gqlFetch(
     `
-mutation AddNote($lessonId: String!, $text: String!) {
-  addNote(lessonId: $lessonId, text: $text) {
+mutation AddNote($courseId: String!, $text: String!, $lessonId: String!) {
+  addNote(courseId: $courseId, text: $text, lessonId: $lessonId) {
     id
     text
-    time
     userId
+    user {
+      avatar
+      name
+    }
   }
 }
         `,

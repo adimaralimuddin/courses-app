@@ -48,6 +48,32 @@ export const ModuleMutation = extendType({
       resolve(par, data, { prisma }) {
         return prisma.module.create({ data });
       },
-    });
+    }); // add module
+
+    // update module
+    t.field("updateModule", {
+      type: Module,
+      args: {
+        id: nonNull(stringArg()),
+        title: nonNull(stringArg()),
+        duration: stringArg(),
+      },
+      resolve(par, { id, ...data }, { prisma }) {
+        console.log({ id, ...data });
+        return prisma.module.update({ where: { id }, data });
+      },
+    }); // update module
+
+    // delete module
+    t.field("deleteModule", {
+      type: Module,
+      args: {
+        id: nonNull(stringArg()),
+      },
+      resolve(par, { id }, { prisma }) {
+        console.log({ id });
+        return prisma.module.delete({ where: { id } });
+      },
+    }); // delete module
   },
 });

@@ -2,14 +2,13 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import create from "zustand";
 import { LearnQueryType } from "../../learn/learnTypes/LearnQueryType";
 import qnaApiQueriesQna from "../qnaApis/qnaApiQueriesQna";
-import QnaType from "../qnaTypes/QnaType";
 
 export const QnaState = create<LearnQueryType, []>((set) => ({
   set,
   text: "",
   sort: "latest",
   lesson: "current",
-  question: "all",
+  list: "all",
 }));
 
 export default function useQnaQueries(
@@ -17,9 +16,9 @@ export default function useQnaQueries(
   lessonId: string | undefined
 ) {
   const { set, ...queryStates } = QnaState((state) => state);
-
+  const { text, lesson, list, sort } = queryStates;
   const { fetchNextPage, data, refetch, ...queries } = useInfiniteQuery({
-    queryKey: ["qna-queries", courseId, lessonId],
+    queryKey: ["qna-queries", courseId, lessonId, lesson, list, sort],
     queryFn: ({ pageParam = undefined }) => {
       return qnaApiQueriesQna({
         cursor: pageParam,

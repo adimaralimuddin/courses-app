@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+import AppHeader from "./AppHeader";
 import AppLogo from "./AppLogo";
 import AppNav from "./AppNav";
 import AppUserMenu from "./AppUserMenu";
@@ -17,14 +18,7 @@ export default function LayoutMain({
 }) {
   return (
     <div className={" tdext-white min-h-screen " + className}>
-      <header className={"  " + headerClass}>
-        <div className=" flex p-3 gap-3 items-center max-w-7xl mx-auto bg-red-400d  ">
-          <AppLogo />
-          {Child1 && Child1}
-          <AppNav />
-          <AppUserMenu />
-        </div>
-      </header>
+      <AppHeader className={headerClass} Child1={Child1} />
       {children}
       <LayoutFooter />
     </div>

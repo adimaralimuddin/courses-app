@@ -1,35 +1,59 @@
 import React from "react";
 import NoListsComp from "../../../components/elements/NoListsComp";
-import NoteListsDivComp from "../../../components/featureComps/noteComps/noteMainComps/NoteListsDivComp";
-import NoteMainComp from "../../../components/featureComps/noteComps/noteMainComps/NoteMainComp";
-import NoteQueryComp from "../../../components/featureComps/noteComps/noteMainComps/NoteQueryComp";
+import SkeletonItem from "../../../components/elements/SkeletonItem";
+import LearnListComp from "../../learn/learnListsComps/LearnListComp";
+
 import useLearn from "../../learn/learnHooks/useLearn";
 import NoteAdder from "../noteEditors/NoteAdder";
-import useNotes from "../noteHooks/useNotes";
+import useNoteQueries from "../noteHooks/useNoteQueries";
 import NoteItem from "../noteItems/NoteItem";
+import NoteType from "../noteTypes/NoteType";
 interface Props {
   courseId: string;
 }
 export default function NoteMain({ courseId }: Props) {
   const { lesson } = useLearn(courseId);
-  const { data: notes } = useNotes(lesson?.id);
-
-  if (!lesson?.id) {
-    return <div>loadding notes. . .</div>;
-  }
+  const query = useNoteQueries(courseId, lesson?.id);
+  const {
+    text,
+    onQuery,
+    fetchNextPage,
+    data,
+    hasNextPage,
+    isLoading,
+    isFetchingNextPage,
+  } = query;
 
   return (
-    <NoteMainComp
+    <LearnListComp
+      list="notes"
       Adder={<NoteAdder courseId={courseId} lessonId={lesson?.id} />}
+      state={query.queryStates}
+      onQuery={onQuery}
+      onLoadMore={fetchNextPage}
+      hasNextPage={hasNextPage}
+      isFetchingNextPage={isFetchingNextPage}
+      optionList={false}
     >
-      <NoteQueryComp>
-        <NoteListsDivComp>
-          {notes?.map((note) => (
-            <NoteItem note={note} key={note.id} lessonId={lesson?.id} />
+      {isLoading && (
+        <div>
+          {[0, 1, 2, 3, 4].map((i) => (
+            <SkeletonItem key={i} />
           ))}
-          {notes?.length == 0 && <NoListsComp text="No Notes Yet!" />}
-        </NoteListsDivComp>
-      </NoteQueryComp>
-    </NoteMainComp>
+        </div>
+      )}
+      {data?.pages?.map((page) =>
+        page?.notes?.map((note: NoteType) => (
+          <NoteItem
+            courseId={courseId}
+            note={note}
+            key={note.id}
+            lessonId={lesson?.id}
+            text={text}
+          />
+        ))
+      )}
+      {data?.pages?.length == 0 && <NoListsComp word="Notes" />}
+    </LearnListComp>
   );
 }

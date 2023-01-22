@@ -1,5 +1,6 @@
 import { extendType, nonNull, objectType, stringArg } from "nexus";
 import { Course } from "./course";
+import { Lesson } from "./lesson";
 
 export const Learn = objectType({
   name: "Learn",
@@ -24,8 +25,9 @@ export const LearnQuery = extendType({
     t.field("learn", {
       type: Learn,
       args: { courseId: nonNull(stringArg()) },
-      resolve(par, { courseId }, { prisma, user }) {
-        return prisma.learn.findFirst({
+      async resolve(par, { courseId }, { prisma, user }) {
+        console.log("courseId = ", courseId);
+        let ret = await prisma.learn.findFirst({
           where: {
             courseId,
             userId: user.sub,
@@ -44,9 +46,54 @@ export const LearnQuery = extendType({
               },
             },
           },
-        });
+        }); // prisma.learn.findFirst
+        console.log("ret ", ret);
+        return ret;
       },
     });
+
+    // initLearn
+    t.field("initLearn", {
+      type: Lesson,
+      args: { courseId: nonNull(stringArg()) },
+      async resolve(par, { courseId }, { prisma, user }) {
+        const learn = await prisma.learn.findUnique({
+          where: {
+            userId_courseId: {
+              userId: user?.sub,
+              courseId,
+            },
+          },
+        }); // prisma
+        console.log("earn", learn);
+        if (learn?.currentLessonId) {
+          console.log(
+            "yesss****************************************************"
+          );
+          const lesson_ = await prisma.lesson.findUnique({
+            where: { id: learn?.currentLessonId },
+          });
+          console.log("lesson", lesson_);
+          return lesson_;
+        } else {
+          console.log("nooo___________________________________________");
+          const module_ = await prisma.module.findFirst({
+            where: { courseId },
+            select: {
+              id: true,
+            },
+          });
+
+          console.log("module", module_);
+
+          const lesson_ = await prisma.lesson.findFirst({
+            where: { moduleId: module_?.id },
+          });
+          console.log("lesson", lesson_);
+          return lesson_;
+        }
+      },
+    }); // initLearn
   },
 });
 
