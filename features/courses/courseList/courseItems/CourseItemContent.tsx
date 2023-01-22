@@ -7,7 +7,9 @@ export default function CourseItemContent({
 }: CourseItemCompsProps) {
   return (
     <div className={"flex flex-col gap-1 ring-1d p-2 flex-1 " + className}>
-      <h3 className="font-semibold leading-5 flex-1">{course?.title}</h3>
+      <h3 className="font-semibold leading-5 flex-1 max-h-[50px] overflow-hidden">
+        {course?.title}
+      </h3>
 
       {course?.free ? (
         <div className="flex gap-2">

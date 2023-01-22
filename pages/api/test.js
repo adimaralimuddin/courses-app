@@ -9,24 +9,7 @@ export default async function testApi(req, res) {
   let ret = { no: true };
   const prisma = new PrismaClient();
 
-  const x = await prisma.course.create({
-    data: { title: "hello", creatorId: userId },
-  });
-
-  // const x = await prisma.learn.create
-  // const x = await prisma.course.findUnique({
-  //   where: { id },
-  //   select: {
-  //     title: true,
-  //     students: {
-  //       where: { id: userId },
-  //       select: {
-  //         id: true,
-  //         name: true,
-  //       },
-  //     },
-  //   },
-  // });
+  const x = await prisma.course.findMany();
 
   ret = x;
   console.log("ret ", ret);
