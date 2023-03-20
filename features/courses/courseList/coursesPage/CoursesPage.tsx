@@ -17,6 +17,8 @@ export default function CoursesPage() {
   const { data, onPrev, onNext, onQuery, isLoading } = useCourses();
   const { onSelect, selectedCourse } = useCoursesPage();
 
+  console.log(`data`, data);
+
   return (
     <LayoutMain className={"bg-primary-bg"}>
       <div className="flex  ">

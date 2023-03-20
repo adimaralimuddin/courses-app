@@ -1,9 +1,6 @@
-import { NextApiResponse } from "next";
-// pages/api/auth/[...auth0].js
 import { handleAuth, handleCallback, Session } from "@auth0/nextjs-auth0";
 import { PrismaClient } from "@prisma/client";
-import { NextApiRequest } from "next";
-// const prisma = new
+import { NextApiRequest, NextApiResponse } from "next";
 
 const afterCallback = async (
   req: NextApiRequest,
@@ -35,6 +32,7 @@ const afterCallback = async (
 
 export default handleAuth({
   async callback(req, res) {
+    console.log("sucks!!!!!!!!!!!!!!!!!");
     try {
       await handleCallback(req, res, { afterCallback });
     } catch (error: any) {

@@ -1,16 +1,33 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  Updater,
+  useMutation,
+  useQueryClient,
+  UseQueryResult,
+} from "@tanstack/react-query";
 import gqlFetch from "../../api/gqlFetch";
+import CoursesPage from "../courseList/coursesPage/CoursesPage";
+import { CourseState } from "../courseStates/CourseState";
+import CoursePageType from "./../../courses/courseTypes/CoursePageType";
 import { CourseType } from "./../../courses/courseTypes/CourseType";
 
 export default function useMyCourseAdder() {
   const qClient = useQueryClient();
+  const { set, ...states } = CourseState((state) => state);
+  const { cursor, filter, sort, order } = states;
   const courseAdderQuery = useMutation(courseAdderQueryFn, {
     onSuccess: (newCourse) => {
       console.log("added", newCourse);
-      // qClient.invalidateQueries(["courses"]);
-      // qClient.setQueryData(["my-courses"], (courses: CourseType[]) => {
-      //   return courses ? [] : [];
-      // });
+      qClient.invalidateQueries(["courses"]);
+      qClient.setQueryData(
+        ["mycourses", cursor, filter, sort, order],
+        (coursePage: any) => {
+          coursePage.courses = [...coursePage?.courses, newCourse];
+          return coursePage;
+        }
+      );
+    },
+    onError(err) {
+      console.log(`error usecoars adder`, err);
     },
   });
 

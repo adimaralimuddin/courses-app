@@ -11,6 +11,9 @@ export default function useCourses() {
   const query: UseQueryResult<CoursePageType, unknown> = useQuery({
     queryKey: ["courses", cursor, filter, sort, order],
     queryFn: () => courseQueryFn(states),
+    onError(err) {
+      console.log(`err`, err);
+    },
   });
 
   function onNext() {

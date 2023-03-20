@@ -8,10 +8,19 @@ export default function useMyCourses() {
   const { set, ...states } = CourseState((state) => state);
   const { cursor, filter, sort, order } = states;
 
-  const query: UseQueryResult<CoursePageType, unknown> = useQuery(
+  const query = useQuery<CoursePageType>(
     ["mycourses", cursor, filter, sort, order],
-    () => courseQueryFun(states)
+    () => courseQueryFun(states),
+    {
+      onError(err) {
+        console.log(`err usemycroures`, err);
+      },
+    }
   );
+  // const query: UseQueryResult<CoursePageType, unknown> = useQuery(
+  //   ["mycourses", cursor, filter, sort, order],
+  //   () => courseQueryFun(states)
+  // );
 
   function onNext() {
     // get last course as next cursor
